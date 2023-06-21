@@ -23,12 +23,9 @@ jobs:
         distribution: 'adopt'
         cache: maven
     - name: Build with Maven
-      run: mvn clean install
-
-  # Install azure-cli
-    - uses: elstudio/action-install-azure-cli@v1      
+      run: mvn clean install  
     
-    - name: Log in with Azure
+    - name: 'Az CLI login'
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
