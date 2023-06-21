@@ -25,6 +25,9 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
 
+    - name: Set up Azure CLI
+      uses: azure/setup-az-cli@v1
+      
     - name: Azure Login
       uses: Azure/login@v1
       with:
