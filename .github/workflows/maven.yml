@@ -25,36 +25,23 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
 
-#     - uses: azure/docker-login@v1
-#       with:
-#         login-server: 'acrloki.azurecr.io' # default: index.docker.io
-#         username: 'acrloki'
-#         password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
-    
-#     - uses: azure/docker-login@v1
-#       with:
-#         login-server: acrloki.azurecr.io
-#         username: acrloki
-#         password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
-
-#     - run: |
-#         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
-#         docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
-
-    - name: Azure Container Registry Build
-      uses: Azure/acr-build@v1
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        # Service Principal with Contributor role on the ACR
-        service_principal: 113e4b2d-a366-485c-8aa7-2481e0629d2c
-        # Service Principal password
-        service_principal_password: cCE8Q~b5EkvgbLVLe4OdBRTnsmwuhNfc0NFe_bsR
-        # Azure Container Registry tenant
-        tenant: f4eebf37-195a-4f44-b689-0540703f8207
-        # The name of the ACR, minus the .azurecr.io
-        registry: acrloki
-        # Repository to use
-        repository: https://github.com/naveengitdev2/github-actions-example.git
-#         # Github access token for private repositories
-#         git_access_token: 
-        # The folder in the Github repo that holds the source
-        folder: .github/workflows/maven.yml
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build and push Docker image
+      uses: azure/docker-login@v1
+      with:
+        login-server: acrloki.azurecr.io
+        username: acrloki
+        password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+
+    - name: Build and push image to ACR
+      uses: azure/acr-build@v1
+      with:
+        azure-container-registry: acrloki
+        image: .
+        context: .
+        build-args: |
+          ARG_NAME=value
