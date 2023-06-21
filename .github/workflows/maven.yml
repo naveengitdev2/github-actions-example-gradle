@@ -36,18 +36,21 @@ jobs:
         login-server: acrloki.azurecr.io
         username: acrloki
         password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
-    - run: |
-        az acr build --registry $ACR_NAME --image helloacrtasks:${{ github.sha }} .
-        #docker push contoso.azurecr.io/k8sdemo:${{ github.sha }}
-
-#     - name: Build and push image to ACR
-#       uses: azure/acr-build@v1
-#       with:
-#         azure-container-registry: acrloki
-#         image: .
-#         context: .
-#         build-args: |
-#           ARG_NAME=value
-
+    - name: Azure Container Registry Build
+      uses: Azure/acr-build@v1
+      with:
+        # Service Principal with Contributor role on the ACR
+        service_principal: ea8023cc-8af0-4bd0-9bff-24c4b9e1cf7e
+        # Service Principal password
+        service_principal_password: 1qM8Q~iBwUHth6GS6h2ZubyGPaIiDlEtYz.HIdp0
+        # Azure Container Registry tenant
+        tenant: f4eebf37-195a-4f44-b689-0540703f8207
+        # The name of the ACR, minus the .azurecr.io
+        registry: acrloki
+        # Repository to use
+        repository: https://github.com/naveengitdev2/github-actions-example.git
+#         # Github access token for private repositories
+#         git_access_token: 
+        # The folder in the Github repo that holds the source
+        folder: https://github.com/naveengitdev2/github-actions-example
     
-
