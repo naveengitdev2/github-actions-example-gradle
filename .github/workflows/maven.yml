@@ -25,10 +25,10 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
 
-    - name: Login to Azure
-      uses: azure/login@v1
+    - name: Azure Login
+      uses: Azure/login@v1
       with:
-        creds: 1qM8Q~iBwUHth6GS6h2ZubyGPaIiDlEtYz.HIdp0
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Build and push Docker image
       uses: azure/docker-login@v1
