@@ -25,11 +25,11 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
 
-    - uses: azure/docker-login@v1
-      with:
-        login-server: 'acrloki.azurecr.io' # default: index.docker.io
-        username: 'acrloki'
-        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
+#     - uses: azure/docker-login@v1
+#       with:
+#         login-server: 'acrloki.azurecr.io' # default: index.docker.io
+#         username: 'acrloki'
+#         password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
     
 #     - uses: azure/docker-login@v1
 #       with:
