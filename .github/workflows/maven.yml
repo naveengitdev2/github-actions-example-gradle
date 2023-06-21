@@ -36,13 +36,18 @@ jobs:
         login-server: acrloki.azurecr.io
         username: acrloki
         password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+    - run: |
+        az acr build --registry $ACR_NAME --image helloacrtasks:${{ github.sha }} .
+        #docker push contoso.azurecr.io/k8sdemo:${{ github.sha }}
 
-    - name: Build and push image to ACR
-      uses: azure/acr-build@v1
-      with:
-        azure-container-registry: acrloki
-        image: .
-        context: .
-        build-args: |
-          ARG_NAME=value
+#     - name: Build and push image to ACR
+#       uses: azure/acr-build@v1
+#       with:
+#         azure-container-registry: acrloki
+#         image: .
+#         context: .
+#         build-args: |
+#           ARG_NAME=value
+
+    
 
