@@ -34,16 +34,17 @@ jobs:
 #         branch: main
 #         build_args: '[{"arg_one":"value_one"}, {"arg_two":"value_two"}]'
 
-    - name: Set up Azure CLI
-      uses: azure/login@v1
+    - name: Login to Azure Container Registry
+      uses: azure/docker-login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        login-server: acrloki.azurecr.io
+        username: acrloki
+        password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+
+    - name: Build and push Docker image
+      uses: azure/docker@v1
+      with:
         context: .
-        Dockerfile: ./Dockerfile
-        
-    - name: Build and push to ACR
-      env:
-        ACR_NAME: acrloki
-        IMAGE_NAME: loki
-      run: |
-        az acr build --registry $ACR_NAME --image $IMAGE_NAME .
+        dockerfile: Dockerfile
+        imageName: ${{ secrets.AZURE_REGISTRY_LOGIN }}/my-image
+        push: true
