@@ -18,18 +18,30 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: ACR build
-      id: acr
-      uses: azure/acr-build@v1
+#     - name: ACR build
+#       id: acr
+#       uses: azure/acr-build@v1
+#       with:
+#         service_principal: ${{ secrets.service_principal }}
+#         service_principal_password: ${{ secrets.service_principal_password }}
+#         tenant: ${{ secrets.tenant }}
+#         registry: ${{ secrets.registry }}
+#         repository: ${{ secrets.repository }}
+#         image: image
+#         git_access_token: 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
+#         folder: src/docker
+#         dockerfile: ../../dockerfiles/Dockerfile
+#         branch: main
+#         build_args: '[{"arg_one":"value_one"}, {"arg_two":"value_two"}]'
+
+    - name: Set up Azure CLI
+      uses: azure/login@v1
       with:
-        service_principal: ${{ secrets.service_principal }}
-        service_principal_password: ${{ secrets.service_principal_password }}
-        tenant: ${{ secrets.tenant }}
-        registry: ${{ secrets.registry }}
-        repository: ${{ secrets.repository }}
-        image: image
-        git_access_token: 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
-        folder: src/docker
-        dockerfile: ../../dockerfiles/Dockerfile
-        branch: main
-        build_args: '[{"arg_one":"value_one"}, {"arg_two":"value_two"}]'
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build and push to ACR
+      env:
+        ACR_NAME: acrloki
+        IMAGE_NAME: loki
+      run: |
+        az acr build --registry $ACR_NAME --image $IMAGE_NAME .
