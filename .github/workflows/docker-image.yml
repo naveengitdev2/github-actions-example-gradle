@@ -6,31 +6,26 @@ on:
   pull_request:
     branches: [ "master" ]
 
+env:
+  ACR_NAME: acrloki
+  ACR_REGISTRY: acrloki.azurecr.io
+  ACR_USERNAME: acrloki
+  ACR_PASSWORD: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-    - name: Azure Container Registry Build
-      uses: Azure/acr-build@v1
+    - name: ACR Build
+      uses: azure/container-actions/acr-build@v1
       with:
-        # Service Principal with Contributor role on the ACR
-        service_principal: ea8023cc-8af0-4bd0-9bff-24c4b9e1cf7e
-        # Service Principal password
-        service_principal_password: eoI8Q~fjn8c25upOBB3Uw127fWGl3-uqEOjQRcaN
-        # Azure Container Registry tenant
-        tenant: f4eebf37-195a-4f44-b689-0540703f8207
-        # The name of the ACR, minus the .azurecr.io
-        registry: acrloki
-        # Repository to use
-        repository: https://github.com/naveengitdev2/github-actions-example
-        # Github access token for private repositories
-        git_access_token: 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
-        # The folder in the Github repo that holds the source
-        folder: ./Dockerfile
+        azure-container-registry: $ACR_REGISTRY
+        image: $ACR_NAME:{{.Run.ID}}
+        context: .
+      env:
+        REGISTRY_USERNAME: ${{ secrets.ACR_USERNAME }}
+        REGISTRY_PASSWORD: ${{ secrets.ACR_PASSWORD }}
