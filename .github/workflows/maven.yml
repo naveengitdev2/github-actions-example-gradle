@@ -34,17 +34,17 @@ jobs:
 #         branch: main
 #         build_args: '[{"arg_one":"value_one"}, {"arg_two":"value_two"}]'
 
-    - name: Login to Azure Container Registry
+    - name: Log in to ACR
       uses: azure/docker-login@v1
       with:
         login-server: acrloki.azurecr.io
         username: acrloki
         password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
 
-    - name: Build and push Docker image
+    - name: Build and push image
       uses: azure/docker@v1
       with:
         context: .
-        dockerfile: Dockerfile
-        imageName: ${{ secrets.AZURE_REGISTRY_LOGIN }}/my-image
-        push: true
+        Dockerfile: Dockerfile
+        image: acrloki.azurecr.io/thanos:v1
+        include-tags: latest
