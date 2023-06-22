@@ -23,12 +23,10 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: ACR Build
-      uses: azure/container-actions/acr-build@v1
+    - name: Build image on ACR
+      uses: azure/login@v1
       with:
-        azure-container-registry: $ACR_REGISTRY
-        image: $ACR_NAME:{{.Run.ID}}
-        context: .
-      env:
-        REGISTRY_USERNAME: ${{ secrets.ACR_USERNAME }}
-        REGISTRY_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+         azcliversion: 2.29.1
+         inlineScript: |
+           az configure --defaults acr=${{ env.AZURE_CONTAINER_REGISTRY }}
+           az acr build -t  -t ${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
