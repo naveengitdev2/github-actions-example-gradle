@@ -39,8 +39,7 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
         context: .
-        Dockerfile: Dockerfile  # Replace with your Dockerfile path
-        image: ${{ secrets.ACR_REGISTRY }}/your-image-name:latest  # Replace with your desired image name
+        Dockerfile: ./Dockerfile
         
     - name: Build and push to ACR
       env:
