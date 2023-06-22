@@ -28,10 +28,14 @@ jobs:
           username: acrloki
           password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
 
-      # Build and tag the Docker image
-      - name: Build and tag image
-        run: docker build -t acrloki.azurecr.io/k8sdemo
-
-      # Push the Docker image to ACR
-      - name: Push image to ACR
-        run: docker push acrloki.azurecr.io/k8sdemo
+      - name: ACR Task
+        uses: Azure/acr-task@v1
+        with:
+          context: .
+          image: k8sdemo/acrloki:latest
+          platform: linux
+          secrets: |
+            ACR_NAME=acrloki
+            ACR_REGISTRY=k8sdemo
+            ACR_USERNAME=acrloki
+            ACR_PASSWORD=Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
