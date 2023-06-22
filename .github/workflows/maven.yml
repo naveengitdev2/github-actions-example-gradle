@@ -1,24 +1,10 @@
-
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: ACR Build
+name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ master ]
-
-# jobs:
-#   build:
-
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       # Checkout the repository
-#       - name: Checkout
-#         uses: actions/checkout@v2
+    branches: [ "master" ]
 
 env:
   ACR_NAME: acrloki
@@ -28,27 +14,19 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
+
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        java-version: '1.8'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean install
-        
-    - uses: azure/docker-login@v1
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build image on ACR
+      uses: azure/login@v1
       with:
-        login-server: 'acrloki.azurecr.io' # default: index.docker.io
-        username: 'acrloki'
-        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
-
-    - name: Build and push Docker image to ACR
-      run: |
-        az acr build --registry $ACR_NAME --image loki:v1 .
-
+         azcliversion: 2.29.1
+         inlineScript: |
+           az configure --defaults acr=${{ env.ACR_REGISTRY }}
+           az acr build -t  -t ${{ env.ACR_REGISTRY }}/${{ env.ACR_NAME }}:${{ github.sha }}
