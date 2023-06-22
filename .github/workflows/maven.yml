@@ -39,7 +39,7 @@ jobs:
         registry: acrloki
         repository: acrloki.azurecr.io/k8sdemo
         image: image
-        git_access_token: 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
+        git_access_token: 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
 #         folder: ./
         dockerfile: ../../Dockerfile
         branch: main
