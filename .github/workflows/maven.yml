@@ -30,13 +30,6 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-#     - name: Build and push Docker image
-#       uses: azure/docker-login@v1
-#       with:
-#         login-server: acrloki.azurecr.io
-#         username: acrloki
-#         password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
-        
     - name: Azure Container Registry Build
       uses: Azure/acr-build@v1
       with:
@@ -45,5 +38,5 @@ jobs:
         tenant: f4eebf37-195a-4f44-b689-0540703f8207
         registry: acrloki
         repository: acrloki.azurecr.io/k8sdemo
-        folder: Dockerfile
+        folder: src/main
     
