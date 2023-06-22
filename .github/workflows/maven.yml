@@ -41,11 +41,11 @@ jobs:
         username: 'acrloki'
         password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
     
-    - uses: azure/docker-login@v1
-      with:
-        login-server: acrloki.azurecr.io
-        username: acrloki
-        password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+#     - uses: azure/docker-login@v1
+#       with:
+#         login-server: acrloki.azurecr.io
+#         username: acrloki
+#         password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
 
     - run: |
         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
