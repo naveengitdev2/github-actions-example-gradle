@@ -11,26 +11,20 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: '1.8'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean install
-        
-    - uses: azure/docker-login@v1
-      with:
-        login-server: 'acrloki.azurecr.io' # default: index.docker.io
-        username: 'acrloki'
-        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
-
-    - run: |
-        docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
-        docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+      - name: ACR build
+        id: acr
+        uses: azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.service_principal }}
+          service_principal_password: ${{ secrets.service_principal_password }}
+          tenant: ${{ secrets.tenant }}
+          registry: ${{ secrets.registry }}
+          repository: ${{ secrets.repository }}
+          image: image
+          git_access_token: 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
+          folder: src/docker
+          dockerfile: ../../dockerfiles/Dockerfile
+          branch: main
+          build_args: '[{"arg_one":"value_one"}, {"arg_two":"value_two"}]'
