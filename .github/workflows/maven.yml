@@ -38,7 +38,10 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+        context: .
+        Dockerfile: Dockerfile  # Replace with your Dockerfile path
+        image: ${{ secrets.ACR_REGISTRY }}/your-image-name:latest  # Replace with your desired image name
+        
     - name: Build and push to ACR
       env:
         ACR_NAME: acrloki
