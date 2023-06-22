@@ -31,12 +31,14 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Azure Container Registry Build
-      uses: Azure/acr-build@v1
+      uses: azure/acr-build@v1
       with:
         service_principal: ea8023cc-8af0-4bd0-9bff-24c4b9e1cf7e
         service_principal_password: 1qM8Q~iBwUHth6GS6h2ZubyGPaIiDlEtYz.HIdp0
         tenant: f4eebf37-195a-4f44-b689-0540703f8207
         registry: acrloki
         repository: acrloki.azurecr.io/k8sdemo
-        folder: ./
-    
+        image: image
+        folder: src/main
+        dockerfile: ../../Dockerfile
+        branch: main
