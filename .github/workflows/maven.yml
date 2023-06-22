@@ -39,6 +39,6 @@ jobs:
         registry: acrloki
         repository: acrloki.azurecr.io/k8sdemo
         image: image
-        folder: src/main
+        folder: ./
         dockerfile: ../../Dockerfile
         branch: main
