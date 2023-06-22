@@ -38,5 +38,5 @@ jobs:
         tenant: f4eebf37-195a-4f44-b689-0540703f8207
         registry: acrloki
         repository: acrloki.azurecr.io/k8sdemo
-        folder: src/main
+        folder: github-actions-example/Dockerfile
     
