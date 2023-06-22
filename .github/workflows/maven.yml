@@ -16,22 +16,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: '1.8'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean install
-        
-    - uses: azure/docker-login@v1
-      with:
-        login-server: 'acrloki.azurecr.io' # default: index.docker.io
-        username: 'acrloki'
-        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
+      # Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - run: |
-        docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
-        docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+      # Login to Azure Container Registry
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: acrloki.azurecr.io
+          username: acrloki
+          password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+
+      # Build and tag the Docker image
+      - name: Build and tag image
+        run: docker build -t thanos .
+
+      # Push the Docker image to ACR
+      - name: Push image to ACR
+        run: docker push thanos
