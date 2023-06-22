@@ -30,8 +30,8 @@ jobs:
 
       # Build and tag the Docker image
       - name: Build and tag image
-        run: docker build -t thanos .
+        run: docker build -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
 
       # Push the Docker image to ACR
       - name: Push image to ACR
-        run: docker push thanos
+        run: docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
