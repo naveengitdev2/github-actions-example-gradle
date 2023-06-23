@@ -1,12 +1,1 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name:  flask-svc
-spec:
-  selector:
-    app:  flask
-  type:  LoadBalancer
-  ports:
-  - name:  http
-    port:  80
-    targetPort: 8080
+kubectl expose deployment mydeployment --type=NodePort --port=8080 --name=mydeployment-service --dry-run=client -o yaml > mydeployment-service.yaml
