@@ -50,8 +50,8 @@ jobs:
       id: set-context
       uses: azure/aks-set-context@v3
       with:
-        resource-group: '${{ secrets.resource_group }}' 
-        cluster-name: '${{ secrets.cluster_name }}'
+        resource-group: github-actions-rg
+        cluster-name: myaks
     - name: Setup kubectl
       id: install-kubectl
       uses: azure/setup-kubectl@v3
