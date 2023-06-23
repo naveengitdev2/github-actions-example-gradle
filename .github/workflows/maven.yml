@@ -27,8 +27,8 @@ jobs:
         
     - uses: azure/docker-login@v1
       with:
-        login-server: 'acrcontainer5688.azurecr.io' # default: index.docker.io
-        username: 'acrcontainer5688'
+        login-server: 'acrloki.azurecr.io' # default: index.docker.io
+        username: 'acrloki'
         password: 'v58/oLqFH7dK/r+uWhWahuRwKci/yBFxfEuSQDUsZI+ACRCygAhF'
 
     - run: |
