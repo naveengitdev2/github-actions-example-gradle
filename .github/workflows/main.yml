@@ -41,26 +41,26 @@ jobs:
         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
         docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
 
-    - name: Azure login
-      id: login
-      uses: azure/login@v1.4.3
+    # Set the target AKS cluster.
+    - uses: Azure/aks-set-context@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: Set AKS context
-      id: set-context
-      uses: azure/aks-set-context@v3
-      with:
-        resource-group: github-actions-rg
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: myaks
-    - name: Setup kubectl
-      id: install-kubectl
-      uses: azure/setup-kubectl@v3
-    - name: Deploy to AKS
-      id: deploy-aks
-      uses: Azure/k8s-deploy@v4
+        resource-group: github-actions-rg
+        
+    - uses: Azure/k8s-create-secret@v1
       with:
-        namespace: 'default'
+        container-registry-url: acrloki.azurecr.io
+        container-registry-username: acrloki
+        container-registry-password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+        secret-name: k8s-secret
+
+    - uses: Azure/k8s-deploy@v1
+      with:
         manifests: |
-          azure-all-in-one.yaml
-          images: acrloki.azurecr.io/azuredocs/azure-vote-front:v1
-          pull-images: false
+          manifests/deployment.yaml
+          manifests/service.yaml
+        images: |
+          acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+        imagepullsecrets: |
+          k8s-secret
