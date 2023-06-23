@@ -29,7 +29,7 @@ jobs:
       with:
         login-server: 'acrloki.azurecr.io' # default: index.docker.io
         username: 'acrloki'
-        password: 'v58/oLqFH7dK/r+uWhWahuRwKci/yBFxfEuSQDUsZI+ACRCygAhF'
+        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
 
     - run: |
         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
