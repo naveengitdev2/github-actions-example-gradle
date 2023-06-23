@@ -22,8 +22,8 @@ jobs:
               password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
 
          - run: |
-              docker build . -t contoso.azurecr.io/k8sdemo:${{ github.sha }}
-              docker push contoso.azurecr.io/k8sdemo:${{ github.sha }}
+              docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+              docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
 
          - uses: azure/setup-kubectl@v2.0
 
