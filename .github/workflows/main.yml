@@ -34,3 +34,13 @@ jobs:
     - run: |
         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
         docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+
+    - name: Simple deploy to Kubernetes cluster
+      # You may pin to the exact commit or the version.
+      # uses: Jtalk/k8s-deploy@dbd56d528215e63ec2a51d1037c2f2796d5e1967
+      uses: Jtalk/k8s-deploy@v2
+      with:
+        # Path to the manifest files which will be used for deployment.
+        manifests: default
+        # deploy/promote/reject
+        action: deploy
