@@ -41,9 +41,6 @@ jobs:
         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
         docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
 
-    - name: Setup kubectl
-      id: install-kubectl
-      uses: azure/setup-kubectl@v3
     - name: Deploy to AKS
       id: deploy-aks
       uses: Azure/k8s-deploy@v4
