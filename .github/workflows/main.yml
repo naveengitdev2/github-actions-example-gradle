@@ -62,3 +62,4 @@ jobs:
           acrloki.azurecr.io/k8sdemo:${{ github.sha }}
         imagepullsecrets: |
           k8sdemo
+
