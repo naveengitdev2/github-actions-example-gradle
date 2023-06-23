@@ -25,26 +25,26 @@ jobs:
               docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
               docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
 
-         - uses: azure/setup-kubectl@v2.0
+#          - uses: azure/setup-kubectl@v2.0
 
-         - uses: Azure/k8s-set-context@v2
-           with:
-              kubeconfig: ${{ secrets.KUBE_CONFIG }}
+#          - uses: Azure/k8s-set-context@v2
+#            with:
+#               kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
-         - uses: Azure/k8s-create-secret@v1.1
-           with:
-              container-registry-url: acrloki.azurecr.io
-              container-registry-username: acrloki
-              container-registry-password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
-              secret-name: demo-k8s-secret
+#          - uses: Azure/k8s-create-secret@v1.1
+#            with:
+#               container-registry-url: acrloki.azurecr.io
+#               container-registry-username: acrloki
+#               container-registry-password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+#               secret-name: demo-k8s-secret
 
-         - uses: Azure/k8s-deploy@v4
-           with:
-              action: deploy
-              manifests: |
-                 manifests/deployment.yml
-                 manifests/service.yml
-              images: |
-                 demo.azurecr.io/k8sdemo:${{ github.sha }}
-              imagepullsecrets: |
-                 demo-k8s-secret
+#          - uses: Azure/k8s-deploy@v4
+#            with:
+#               action: deploy
+#               manifests: |
+#                  manifests/deployment.yml
+#                  manifests/service.yml
+#               images: |
+#                  demo.azurecr.io/k8sdemo:${{ github.sha }}
+#               imagepullsecrets: |
+#                  demo-k8s-secret
