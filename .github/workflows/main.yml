@@ -1,49 +1,52 @@
-name: build_deploy_aks
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: project cicd flow
+
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout source code 
-        uses: actions/checkout@v3
-      - name: ACR build
-        id: build-push-acr
-        uses: azure/acr-build@v1
-        with:
-          service_principal: ${{ secrets.service_principal }}
-          service_principal_password: ${{ secrets.service_principal_password }}
-          tenant: ${{ secrets.tenant }}
-          registry: ${{ secrets.registry }}
-          repository: ${{ secrets.repository }}
-          image:  azure-vote-front
-          folder: azure-vote
-          branch: master
-          tag: ${{ github.sha }}
-      - name: Azure login
-        id: login
-        uses: azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Set AKS context
-        id: set-context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: '${{ secrets.resource_group }}' 
-          cluster-name: '${{ secrets.cluster_name }}'
-      - name: Setup kubectl
-        id: install-kubectl
-        uses: azure/setup-kubectl@v3
-      - name: Deploy to AKS
-        id: deploy-aks
-        uses: Azure/k8s-deploy@v4
-        with:
-          namespace: 'default'
-          manifests: |
-             azure-vote-all-in-one-redis.yaml
-          images: '${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/azure-vote-front:${{ github.sha }}'
-          pull-images: false
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: '1.8'
+        distribution: 'adopt'
+        cache: maven
+    - name: Build with Maven
+      run: mvn clean install
+
+#     - name: Build & push Docker image
+#       uses: mr-smithers-excellent/docker-build-push@v5
+#       with:
+#         image: javatechie/springboot-images-new
+#         tags: latest
+#         registry: docker.io
+#         dockerfile: Dockerfile
+#         username: ${{ secrets.DOCKER_USERNAME }}
+#         password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - uses: azure/docker-login@v1
+      with:
+        login-server: 'acrloki.azurecr.io' # default: index.docker.io
+        username: 'acrloki'
+        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acrloki.azurecr.io
+        username: acrloki
+        password: Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul
+
+    - run: |
+        docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+        docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
