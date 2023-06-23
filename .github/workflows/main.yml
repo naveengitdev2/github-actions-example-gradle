@@ -1,40 +1,36 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+name: Build and deploy to Azure Kubernetes Service
 
-name: project cicd flow
+env:
+  AZURE_CONTAINER_REGISTRY: MY_REGISTRY_NAME # set this to the name of your container registry
+  PROJECT_NAME: MY_PROJECT_NAME              # set this to your project's name
+  RESOURCE_GROUP: MY_RESOURCE_GROUP          # set this to the resource group containing your AKS cluster
+  CLUSTER_NAME: MY_CLUSTER_NAME              # set this to the name of your AKS cluster
+  REGISTRY_URL: MY_REGISTRY_URL              # set this to the URL of your registry
+  # If you bake using helm:
+  CHART_PATH: MY_HELM_FILE                   # set this to the path to your helm file
+  CHART_OVERRIDE_PATH: MY_OVERRIDE_FILES     # set this to an array of override file paths
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: '1.8'
-        distribution: 'adopt'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean install
-        
-    - uses: azure/docker-login@v1
-      with:
-        login-server: 'acrloki.azurecr.io' # default: index.docker.io
-        username: 'acrloki'
-        password: 'Siq/3W4+ntE9YfGNrbSpQFMHkOfm/YrdC9CheVOCmw+ACRALPmul'
+    - uses: actions/checkout@v3
 
-    - run: |
-        docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
-        docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+    - name: Azure Login
+      uses: azure/login@14a755a4e2fd6dff25794233def4f2cf3f866955
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+    - name: Build image on ACR
+      uses: azure/CLI@61bb69d64d613b52663984bf12d6bac8fd7b3cc8
+      with:
+        azcliversion: 2.29.1
+        inlineScript: |
+          az configure --defaults acr=${{ env.AZURE_CONTAINER_REGISTRY }}
+          az acr build -t  -t ${{ env.REGISTRY_URL }}/${{ env.PROJECT_NAME }}:${{ github.sha }}
+    
     - name: Gets K8s context
       uses: azure/aks-set-context@94ccc775c1997a3fcfbfbce3c459fec87e0ab188
       with:
@@ -59,7 +55,6 @@ jobs:
       with:
         manifests: ${{ steps.bake.outputs.manifestsBundle }}
         images: |
-          acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+          ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.PROJECT_NAME }}:${{ github.sha }}
         imagepullsecrets: |
-          k8sdemo
-
+          ${{ env.PROJECT_NAME }}
