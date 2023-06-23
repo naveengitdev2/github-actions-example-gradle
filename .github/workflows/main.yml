@@ -34,3 +34,18 @@ jobs:
     - run: |
         docker build . -t acrloki.azurecr.io/k8sdemo:${{ github.sha }}
         docker push acrloki.azurecr.io/k8sdemo:${{ github.sha }}
+
+    - name: Deploy to Kubernetes cluster
+      uses: Azure/k8s-deploy@v4.9
+      with:
+        # Path to the manifest files which will be used for deployment.
+        manifests: 
+           manifests/deployment.yml
+           manifests/service.yml
+        # Deployment strategy to be used. Allowed values are basic, canary and blue-green
+        strategy: basic
+        # deploy, promote, or reject
+        action: deploy
+        # Github token
+        token: github.token
+        
