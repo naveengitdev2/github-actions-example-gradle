@@ -39,7 +39,7 @@ jobs:
           cluster-name: myaks
       id: login
 
-    - name: Configure deployment for AKS
+    - name: Configure deployment
       uses: azure/k8s-bake@61041e8c2f75c1f01186c8f05fb8b24e1fc507d8
       with:
         renderEngine: 'helm'
