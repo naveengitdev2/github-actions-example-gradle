@@ -31,7 +31,7 @@ FROM adoptopenjdk:11-jre-hotspot
 WORKDIR /app
 
 # Copy the JAR file from the builder stage
-COPY --from=builder /app/build/libs/myapp.jar .
+COPY --from=builder /app/build/libs//springboot-images-new.jar .
 
 # Set the command to run the Spring Boot application
-CMD ["java", "-jar", "myapp.jar"]
+CMD ["java", "-jar", "/springboot-images-new.jar"]
