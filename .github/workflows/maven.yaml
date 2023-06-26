@@ -34,3 +34,27 @@ jobs:
     - run: |
         docker build . -t ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
         docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
+
+# Set the target AKS cluster.
+    - uses: Azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: myaks
+        resource-group: github-actions-rg
+        
+    - uses: Azure/k8s-create-secret@v1
+      with:
+        container-registry-url: ${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io
+        container-registry-username: ${{ secrets.ACR_USERNAME }}
+        container-registry-password: ${{ secrets.ACR_PASSWORD }}
+        secret-name: k8s-secret
+
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: |
+          manifests/deployment.yaml
+          manifests/service.yaml
+        images: |
+          ${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/k8sflask:${{ github.sha }}
+        imagepullsecrets: |
+          k8s-secret
