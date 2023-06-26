@@ -64,3 +64,4 @@ jobs:
           ${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/k8sflask:${{ github.sha }}
         imagepullsecrets: |
           k8s-secret
+
