@@ -1,11 +1,16 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: project cicd flow
+name: Build and Deploy
 
 on:
   push:
     branches: [ master ]
+
+env:
+  AZURE_RESOURCE_GROUP:  ${{ secrets.RESOURCE_GROUP }}
+  AZURE_CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
+  AZURE_CONTAINER_REGISTRY: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
 
 jobs:
   build-and-deploy:
@@ -18,28 +23,35 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: 11
+          java-version: '1.8'
 
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2.4.2
+        run: ./gradlew build -x test
 
-      - name: Build and push Docker image
+      - name: Configure Docker login
         uses: azure/docker-login@v1
-        env:
+        with:
           login-server: ${{ env.AZURE_CONTAINER_REGISTRY }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push Docker image
         run: |
           docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/myapp:${{ github.sha }} .
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/myapp:${{ github.sha }}
 
-      - name: Configure AKS credentials
-        uses: azure/aks-set-context@v1
+      - name: Azure CLI login
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          cluster-name: ${{ env.AZURE_CLUSTER_NAME }}
-          resource-group: ${{ env.AZURE_RESOURCE_GROUP }}
+
+      - name: Set Azure subscription
+        run: az account set --subscription ${{ secrets.SUBSCRIPTION }}
+
+      - name: Configure AKS credentials
+        run: az aks get-credentials --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CLUSTER_NAME }}
 
       - name: Deploy to AKS
         run: |
           kubectl apply -f kubernetes/manifests
+
