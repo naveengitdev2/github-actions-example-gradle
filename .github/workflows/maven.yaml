@@ -60,7 +60,8 @@ jobs:
       with:
         action: deploy
         manifests: |
-          deployment.yaml
+          kubernetes/deployment.yaml
+          kubernetes/service.yaml
         images: |
           ${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/k8sflask:${{ github.sha }}
         imagepullsecrets: |
