@@ -28,8 +28,8 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+#       - name: Setup Gradle
+#         uses: gradle/gradle-build-action@v2
       
       - uses: gradle/gradle-build-action@v2
         with:
@@ -37,7 +37,7 @@ jobs:
 
       - uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }} # default: index.docker.io
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
