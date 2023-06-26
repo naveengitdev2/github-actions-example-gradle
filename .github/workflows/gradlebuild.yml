@@ -35,12 +35,19 @@ jobs:
         with:
           gradle-version: 6.5
     
-      - uses: azure/docker-login@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: 'Docker Login'
+        uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }} # default: index.docker.io
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-
-      - run: |
-          docker build . -t ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
-          docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
+          
+      - name: Build the image and push it to ACR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/aspcoresample:${{ github.sha }}
+          file: ./Dockerfile
