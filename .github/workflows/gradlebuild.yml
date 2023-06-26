@@ -34,12 +34,13 @@ jobs:
           arguments: build
 
       - name: Build and push Docker image
+
       - uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }} # default: index.docker.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-          - run: |
-          docker build . -t ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
-          docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
+      - run: |
+         docker build . -t ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
+         docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
