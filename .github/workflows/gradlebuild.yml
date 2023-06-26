@@ -33,12 +33,7 @@ jobs:
 
       - uses: gradle/gradle-build-action@v2
         with:
-          gradle-version: 6.5
-    
-      - name: Execute Gradle build
-        run: |
-          chmod +x ./gradlew
-          ./gradlew bootJar          
+          gradle-version: 6.5        
 
       - name: Copy Jar file
         run: mv build/libs/$(ls build/libs) springboot-images-new.jar
