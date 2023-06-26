@@ -35,12 +35,15 @@ jobs:
         with:
           gradle-version: 6.5
     
-      - uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }} # default: index.docker.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Execute Gradle build
+        run: |
+          chmod +x ./gradlew
+          ./gradlew bootJar          
 
-      - run: |
-          docker build . -t ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
-          docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
+      - name: Copy Jar file
+        run: mv build/libs/$(ls build/libs) springboot-images-new.jar
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: jar-file
+          path: target/springboot-images-new.jar
