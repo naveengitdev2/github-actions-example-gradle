@@ -56,8 +56,9 @@ jobs:
         container-registry-password: ${{ secrets.ACR_PASSWORD }}
         secret-name: k8s-secret
 
-    - uses: Azure/k8s-deploy@v1
+    - uses: Azure/k8s-deploy@v4
       with:
+        action: deploy
         manifests: ${{ env.DEPLOYMENT_MANIFEST_PATH }}
         images: |
           ${{ secrets.ACR_LOGIN_SERVER }}.azurecr.io/k8sflask:${{ github.sha }}
