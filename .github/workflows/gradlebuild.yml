@@ -32,7 +32,7 @@ jobs:
         with:
           gradle-version: 6.5
     
-      - uses: docker/build-push-action@v4.1.1
+      - uses: cloudposse/github-action-docker-build-push@1.13.0
         with:
             login-server: ${{ secrets.ACR_LOGIN_SERVER }}
             username: ${{ secrets.ACR_USERNAME }}
