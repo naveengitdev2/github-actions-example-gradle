@@ -35,12 +35,12 @@ jobs:
         with:
           gradle-version: 6.5
     
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+      - uses: azure/docker-login@v1
         with:
-          context: .
-          push: true
-          tags: v1
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }} # default: index.docker.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
       - run: |
           docker build . -t ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
           docker push ${{ secrets.ACR_USERNAME }}.azurecr.io/k8sdemo:${{ github.sha }}
