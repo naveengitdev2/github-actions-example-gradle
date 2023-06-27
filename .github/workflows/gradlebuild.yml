@@ -26,12 +26,13 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'temurin'
-
-#       - uses: gradle/gradle-build-action@v2
-#         with:
-#           gradle-version: 6.5        
-#           arguments: build
+          distribution: 'adopt'
+          cache: gradle
+          
+      - uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 6.5        
+          arguments: build
           
       - uses: azure/docker-login@v1
         with:
